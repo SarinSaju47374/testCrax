@@ -6,20 +6,18 @@ const userSlice = createSlice({
         user:null,
     },
     reducers:{
-        loginTutor: (state,action)=>{   
+        createAccount: (state,action)=>{   
             state.user = action.payload;
         },
-        logoutTutor : (state)=>{
-            state.user = null;
+        saveInfo:(state,action)=>{
+            state.user = {...state.user,...action.payload};
         },
-        saveTempCourse: (state,action)=>{
-            state.courseTempId = action.payload;
-        },
-        saveSlots:(state,action)=>{
-            state.slots = action.payload;
+        saveFinancialData:(state,action)=>{
+            state.user =  {...state.user,...action.payload}
         }
+        
     }
 })
 
-export const {loginTutor,logoutTutor,saveTempCourse,saveSlots} = userSlice.actions;
+export const {createAccount,saveInfo,saveFinancialData} = userSlice.actions;
 export default userSlice.reducer

@@ -3,10 +3,12 @@ import { useFormik } from "formik";
 import { signUpUserSchema } from "../schemas";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify"
+import { useDispatch } from "react-redux";
 // import axios from "axios";
 import { Dna } from "react-loader-spinner"
 import axios from "../axios";
 import "../scss/screen/Register.scss"
+import { createAccount } from "../toolkit/slices/user/userSlice";
 function RegisterStage1() {
 
     const [data, setData] = useState({});
@@ -14,7 +16,7 @@ function RegisterStage1() {
     const [isLoading, setIsLoading] = useState(true);
     const [otp, setOtp] = useState("");
     const navigate = useNavigate();
-    
+    const dispatch = useDispatch();
     useEffect(() => {
          
         
@@ -38,10 +40,13 @@ function RegisterStage1() {
             setOtpPage(!otpPage)
             console.log(values.email)
             let response = await axios.post('/create-account', {
-                values
+                email:values.email,
+                mob:values.mob,
+                psswd:values.cnfrm_psswd
             })
             if(response.data.success){
-                toast.success("Account Created")
+                dispatch(createAccount({email:values.email,mob:values.mob}))
+                navigate("/user/register/1")
             }
             //    return
         }

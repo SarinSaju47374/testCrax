@@ -2,17 +2,20 @@ import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import { signUpUser2Schema } from "../schemas";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch,useSelector } from "react-redux";
+import { saveInfo } from "../toolkit/slices/user/userSlice";
 import { ToastContainer, toast } from "react-toastify"
 // import axios from "axios";
 import { Dna } from "react-loader-spinner"
 import axios from "../axios";
 import "../scss/screen/personalDetail.scss"
 function PersonalDet() {
-
+    let data2 = useSelector(state => state.user?.user);
     const [data, setData] = useState({});
     const [otpPage, setOtpPage] = useState(false)
     const [isLoading, setIsLoading] = useState(true);
     const [otp, setOtp] = useState("");
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -24,25 +27,27 @@ function PersonalDet() {
         };
     }, []);
     const initialValues = {
-         title:"",
-         fName:"",
-         dob:"1999-11-12",
-         addr:"",
-         duration:"",
-         info:"",
+         title:data2?.title || "",
+         fName:data2?.fName || "",
+         dob:data2?.dob || "1999-11-12",
+         addr:data2.addr || "",
+         duration:data2?.duration || "",
+         info:data2?.info || "",
 
     }
     const { values, errors, touched, handleBlur, handleFocus, handleChange, handleSubmit ,setFieldValue} = useFormik({
         initialValues: initialValues,
         validationSchema: signUpUser2Schema,
         onSubmit: async (values, action) => {
-            setData(values);
-            setOtpPage(!otpPage)
-            console.log(values.email)
-            await axios.post('/send-otp', {
-                email: values.email
-            })
-            //    return
+           dispatch(saveInfo({
+            title:values.title,
+            fName:values.fName,
+            dob:values.dob,
+            addr:values.addr,
+            duration:values.duration,
+            info:values.info
+           }))
+           navigate("/user/register/2")
         }
     })
 

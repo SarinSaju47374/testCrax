@@ -2,36 +2,40 @@ import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import { financialSchema } from "../schemas";
 import { Link, useNavigate } from "react-router-dom";
+import {useSelector,useDispatch} from "react-redux"
+import { saveFinancialData } from "../toolkit/slices/user/userSlice";
 import { ToastContainer, toast } from "react-toastify"
 // import axios from "axios";
 import { Dna } from "react-loader-spinner"
 import axios from "../axios";
 import "../scss/screen/personalDetail.scss"
 function FinancialDet() {
-
-    const [, setData] = useState({});
+    let data2 = useSelector(state => state?.user?.user);    
+    const [data, setData] = useState({});
     const [otpPage, setOtpPage] = useState(false)
     const [isLoading, setIsLoading] = useState(true);
-
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     useEffect(() => {
-
-
         setIsLoading(false);
-        return () => {
-
-        };
     }, []);
     const initialValues = {
-        status: "",
-        savings: null
+        status: data2?.status || "",
+        savings: data2?.savings || null
     }
     const { values, errors, touched, handleBlur, handleFocus, handleChange, handleSubmit, setFieldValue } = useFormik({
         initialValues: initialValues,
         validationSchema: financialSchema,
         onSubmit: async (values, action) => {
-          
+            dispatch(saveFinancialData({
+                status: values.status,
+                savings:values.savings
+            }))
+            let response = await axios.post("/save-data",{
+                ...data2,...values
+            })
+            
         }
     })
      

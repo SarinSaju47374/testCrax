@@ -13,6 +13,8 @@
   margin-bottom: 2rem;
   padding: 1rem;
   text-align: center;
+  
+
   span{
     h4{
         font-size: 1.3rem;
@@ -219,4 +221,26 @@ margin: 1rem auto;
    
 }
  
-  
+@keyframes pulsatingGlow {
+  0% {
+    box-shadow: 0 0 0 0 $signatureColor;
+  }
+  100% {
+    box-shadow: 0 0 0 1rem rgba(#ff5733, 0);
+  }
+}
+.data-wel{
+  background-color: rgb(231, 240, 240);
+  margin:1rem auto;
+  width:80%;
+  height: 80vh;
+  display: grid;
+  border-radius: 12px;
+  place-items: center;
+  font-size: 2rem;
+  animation: pulsatingGlow 1s infinite;
+  @media screen and (max-width:768px) {
+    font-size: 1rem;
+    text-align: center;
+  }
+}
